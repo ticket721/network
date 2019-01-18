@@ -14,5 +14,11 @@
   "bugs": {
     "url": "https://github.com/mortimr/t721-network/issues"
   },
-  "homepage": "https://github.com/mortimr/t721-network#readme"
+  "homepage": "https://github.com/mortimr/t721-network#readme",
+  "dependencies": {
+    "dockerode": "^2.5.8",
+    "gulp": "^4.0.0",
+    "portalize": "1.0.3",
+    "signale": "^1.3.0"
+  }
 }
