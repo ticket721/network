@@ -50,9 +50,10 @@ const run_ganache = async () => {
 const write_config = async () => {
     log.info(`portalize: writing configuration to portal`);
     const network_configuration = {
-        type: 'local',
+        type: process.env.T721_NETWORK,
         host: '127.0.0.1',
-        port: HOST_PORT
+        port: HOST_PORT,
+        network_id: 2702
     };
     Portalize.get.setPortal('./portal');
     Portalize.get.setModuleName('network');
@@ -67,9 +68,7 @@ const stop_ganache = async () => {
         const container = await Docker.getContainer(CONTAINER_NAME);
         await container.kill();
         log(`docker: killing container`);
-    } catch (e) {
-
-    }
+    } catch (e) {}
     log.info(`docker: clean !`);
 };
 
