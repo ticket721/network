@@ -1,8 +1,7 @@
 const dockerode = require('dockerode');
-const {Signale} = require('signale');
+const signale = require('signale');
 const {Portalize} = require('portalize');
 
-const log = new Signale({interactive: true});
 const Docker = new dockerode();
 
 const GANACHE_IMAGE = 'trufflesuite/ganache-cli:v6.1.6';
@@ -11,13 +10,13 @@ const CONTAINER_NAME = 't721-ganache';
 
 // Docker pull the ganache image
 const pull_ganache = async () => {
-    log.info(`docker: Pulling ${GANACHE_IMAGE}`);
+    signale.info(`docker: Pulling ${GANACHE_IMAGE}`);
     await Docker.pull(GANACHE_IMAGE);
 };
 
 // Creates the container and starts it
 const run_ganache = async () => {
-    log.info(`docker: Creating container ${GANACHE_IMAGE} (${CONTAINER_NAME})`);
+    signale.info(`docker: Creating container ${GANACHE_IMAGE} (${CONTAINER_NAME})`);
     const container = await Docker.createContainer({
             Image: GANACHE_IMAGE,
             ExposedPorts: {
@@ -48,12 +47,18 @@ const run_ganache = async () => {
 
 // Writes config with custom description
 const write_config = async () => {
-    log.info(`portalize: writing configuration to portal`);
+    signale.info(`portalize: writing configuration to portal`);
     const network_configuration = {
         type: process.env.T721_NETWORK,
         host: '127.0.0.1',
         port: HOST_PORT,
-        network_id: 2702
+        network_id: 2702,
+        deployer: '0x945AD1107984F1c8C004D4B076a169cb6E5f12e6',
+        contract_infos: {
+            AdministrationBoard: {
+                initial_member: '0xF8cf4531433b2Ac4bDB2B84a9E350289eb7F467C'
+            }
+        }
     };
     Portalize.get.setPortal('./portal');
     Portalize.get.setModuleName('network');
@@ -69,12 +74,12 @@ const stop_ganache = async () => {
         await container.kill();
         log(`docker: killing container`);
     } catch (e) {}
-    log.info(`docker: clean !`);
+    signale.info(`docker: clean !`);
 };
 
 // Clean this module's portal
 const clean_portal = async () => {
-    log.info(`portalize: clean network !`);
+    signale.info(`portalize: clean network !`);
     Portalize.get.setPortal('./portal');
     Portalize.get.setModuleName('network');
     Portalize.get.clean();
