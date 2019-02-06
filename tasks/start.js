@@ -1,12 +1,13 @@
 const signale = require('signale');
 const {Portalize} = require('portalize');
 const {local_start} = require('./network/local');
+const {from_current} = require('./misc');
 
 const start = async () => {
     signale.info('[network][start]');
 
     // Check if deployment hasn't already occured
-    Portalize.get.setPortal('./portal');
+    Portalize.get.setPortal(from_current('./portal'));
     Portalize.get.setModuleName('network');
     if (Portalize.get.requires({
         action: 'add',

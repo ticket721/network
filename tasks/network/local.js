@@ -1,6 +1,7 @@
 const dockerode = require('dockerode');
 const signale = require('signale');
 const {Portalize} = require('portalize');
+const {from_current} = require('../misc');
 
 const Docker = new dockerode();
 
@@ -60,7 +61,7 @@ const write_config = async () => {
             }
         }
     };
-    Portalize.get.setPortal('./portal');
+    Portalize.get.setPortal(from_current('./portal'));
     Portalize.get.setModuleName('network');
     Portalize.get.add('network.json', network_configuration, {
         desc: 'network ready'
@@ -80,7 +81,7 @@ const stop_ganache = async () => {
 // Clean this module's portal
 const clean_portal = async () => {
     signale.info(`portalize: clean network !`);
-    Portalize.get.setPortal('./portal');
+    Portalize.get.setPortal(from_current('./portal'));
     Portalize.get.setModuleName('network');
     Portalize.get.clean();
 };

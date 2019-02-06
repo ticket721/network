@@ -23,6 +23,10 @@
         "portalize": "1.0.3",
         "signale": "^1.3.0"
     },
+    "devDependencies": {
+        "merge": ">=1.2.1",
+        "deep-extend": ">=0.5.1"
+    },
     "editorconfig-cli": [
         "./package.json",
         "./gulpfile.js",
