@@ -1,20 +1,20 @@
 {
-    "name": "@horyus/t721-network",
+    "name": "@ticket721/network",
     "private": true,
     "version": "1.0.0",
-    "description": "t721-network - Network manager for ticket721",
+    "description": "network - Network manager for ticket721",
     "main": "index.js",
     "scripts": {},
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/mortimr/t721-network.git"
+        "url": "git+https://github.com/ticket721/network.git"
     },
     "author": "Iulian Rotaru",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/mortimr/t721-network/issues"
+        "url": "https://github.com/ticket721/network/issues"
     },
-    "homepage": "https://github.com/mortimr/t721-network#readme",
+    "homepage": "https://github.com/ticket721/network#readme",
     "dependencies": {
         "@htmlacademy/editorconfig-cli": "^1.0.0",
         "dockerode": "^2.5.8",
