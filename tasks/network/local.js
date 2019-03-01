@@ -5,14 +5,21 @@ const {from_current} = require('../misc');
 
 const Docker = new dockerode();
 
-const GANACHE_IMAGE = 'trufflesuite/ganache-cli:v6.1.6';
+const GANACHE_IMAGE = 'trufflesuite/ganache-cli:v6.3.0';
 const HOST_PORT = '8545';
 const CONTAINER_NAME = 't721-ganache';
 
 // Docker pull the ganache image
 const pull_ganache = async () => {
     signale.info(`docker: Pulling ${GANACHE_IMAGE}`);
-    await Docker.pull(GANACHE_IMAGE);
+    return new Promise((ok, ko) => {
+        Docker.pull(GANACHE_IMAGE, (err, res) => {
+            if (err) return ko(err);
+            signale.info(`docker: Pulled ${GANACHE_IMAGE}`);
+            ok();
+        });
+
+    })
 };
 
 // Creates the container and starts it
@@ -28,7 +35,9 @@ const run_ganache = async () => {
                 '-i', '2702',
                 '-h', '0.0.0.0',
                 '-p', '8545',
-                '--mnemonic', 'cross uniform panic climb universe awful surprise list dutch ability label cat'
+                '--mnemonic', 'cross uniform panic climb universe awful surprise list dutch ability label cat',
+                '--gasLimit', '0xffffffffff',
+                '--gasPrice', '0x01'
             ],
             HostConfig: {
                 AutoRemove: true,

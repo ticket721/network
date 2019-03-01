@@ -13,6 +13,7 @@ Network manager for ticket721
 | :---: | :---------: |
 | `network:start` | Start the required network, and writes configuration to portal |
 | `network:clean` | Brings down the required network, clean module's portal |
+| `network:mine` | Calls the `evm_mine` method for ganache nodes |
 
 ## Network Setup
 
@@ -31,4 +32,12 @@ You need to set the `T721_NETWORK` value for the submodule to know what to remov
 
 ```shell
 env T721_NETWORK=<value> gulp network:clean
+```
+
+## Mine on local network
+
+If you need to mine some blocks on a local ganache network, use the following command after starting the network.
+
+```shell
+gulp network:mine --block number_of_blocks_to_mine
 ```
