@@ -61,6 +61,7 @@ const write_config = async () => {
     const network_configuration = {
         type: process.env.T721_NETWORK,
         host: '127.0.0.1',
+        connection_protocol: 'http',
         port: HOST_PORT,
         network_id: 2702,
         deployer: '0x945AD1107984F1c8C004D4B076a169cb6E5f12e6',
