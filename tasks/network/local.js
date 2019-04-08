@@ -15,8 +15,10 @@ const pull_ganache = async () => {
     return new Promise((ok, ko) => {
         Docker.pull(GANACHE_IMAGE, (err, res) => {
             if (err) return ko(err);
-            signale.info(`docker: Pulled ${GANACHE_IMAGE}`);
-            ok();
+            Docker.modem.followProgress(res, () => {
+                signale.success(`docker: Pulled ${GANACHE_IMAGE}`);
+                ok();
+            });
         });
 
     })
