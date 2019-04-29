@@ -67,6 +67,7 @@ const write_config = async () => {
         port: HOST_PORT,
         network_id: 2702,
         deployer: '0x945AD1107984F1c8C004D4B076a169cb6E5f12e6',
+        server: 'http://127.0.0.1:1337',
         contract_infos: {
             AdministrationBoard: {
                 initial_member: '0xF8cf4531433b2Ac4bDB2B84a9E350289eb7F467C'
