@@ -39,7 +39,7 @@ const run_ganache = async () => {
                 '-p', '8545',
                 '--mnemonic', 'cross uniform panic climb universe awful surprise list dutch ability label cat',
                 '--gasLimit', '0xffffffffff',
-                '--gasPrice', '0x01'
+                '--gasPrice', '0x2540BE400' // 16/05
             ],
             HostConfig: {
                 AutoRemove: true,
