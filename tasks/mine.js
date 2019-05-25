@@ -12,7 +12,7 @@ const mine_one = async (web3) =>
                     method: 'evm_mine',
                     params: [],
                     jsonrpc: '2.0',
-                    id: new Date().getTime()
+                    id: 0
                 },
                 ((err, val) => {
                     if (err) {
