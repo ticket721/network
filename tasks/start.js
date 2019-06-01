@@ -1,6 +1,7 @@
 const signale = require('signale');
 const {Portalize} = require('portalize');
 const {local_start} = require('./network/local');
+const {ropsten_start} = require('./network/ropsten');
 const {from_current} = require('./misc');
 
 const start = async () => {
@@ -23,6 +24,9 @@ const start = async () => {
         case 'local':
             await local_start();
             break;
+        case 'ropsten':
+            await ropsten_start();
+            break ;
         default:
             throw new Error(`Unknown Network ${process.env.T721_NETWORK}`)
     }
