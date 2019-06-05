@@ -11,7 +11,7 @@ const write_config = async () => {
         network_id: process.env.T721_NETWORK_ID,
         deployer: process.env.T721_DEPLOYER,
         server: process.env.T721_SERVER_URL,
-        network_gas: 8000000,
+        network_gas: 7000000,
         contract_infos: {
             AdministrationBoard: {
                 initial_member: process.env.T721_ADMIN
