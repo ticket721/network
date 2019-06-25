@@ -2,12 +2,29 @@ const dockerode = require('dockerode');
 const signale = require('signale');
 const {Portalize} = require('portalize');
 const {from_current} = require('../misc');
+const Web3 = require('web3');
 
 const Docker = new dockerode();
 
 const GANACHE_IMAGE = 'trufflesuite/ganache-cli:v6.3.0';
+const GETH_IMAGE = 'horyus/test-geth:latest';
 const HOST_PORT = '8545';
-const CONTAINER_NAME = 't721-ganache';
+const CONTAINER_NAME = 't721-ethnode';
+
+// Docker pull the geth image
+const pull_geth = async () => {
+    signale.info(`docker: Pulling ${GETH_IMAGE}`);
+    return new Promise((ok, ko) => {
+        Docker.pull(GETH_IMAGE, (err, res) => {
+            if (err) return ko(err);
+            Docker.modem.followProgress(res, () => {
+                signale.success(`docker: Pulled ${GETH_IMAGE}`);
+                ok();
+            });
+        });
+
+    })
+};
 
 // Docker pull the ganache image
 const pull_ganache = async () => {
@@ -24,6 +41,61 @@ const pull_ganache = async () => {
     })
 };
 
+// Creates the container and starts it
+const run_geth = async () => {
+    signale.info(`docker: Creating container ${GANACHE_IMAGE} (${CONTAINER_NAME})`);
+    const container = await Docker.createContainer({
+            Image: GETH_IMAGE,
+            ExposedPorts: {
+                '8545': {}
+            },
+            Cmd: [
+                '--rpc', '--rpcport=8545', '--rpcaddr=0.0.0.0', '--rpccorsdomain=*', '--nodiscover', '--maxpeers=0', '--rpcapi=eth,net,web3'
+            ],
+            Env: [
+                "ACCOUNT_NUMBER=10",
+                "NET_ID=2702",
+                "DATADIR=/tmp/data",
+                "MNEMONIC=cross uniform panic climb universe awful surprise list dutch ability label cat"
+            ],
+            Tty: true,
+            HostConfig: {
+                AutoRemove: true,
+                PortBindings: {
+                    '8545': [
+                        {
+                            HostPort: HOST_PORT
+                        }
+                    ]
+                }
+            },
+            name: CONTAINER_NAME
+        }
+    );
+    await container.start();
+    while (true) {
+        try {
+            const web3 = new Web3(new Web3.providers.HttpProvider(`http://localhost:8545`));
+            const coinbase = await web3.eth.getCoinbase();
+            break ;
+        } catch (e) {
+            console.log('No response from geth, retrying in 5s', e.message);
+            await new Promise((ok, ko) => setTimeout(ok, 5000));
+        }
+    }
+    console.log('Waiting 30 sec to let geth unlock all accounts');
+    await new Promise((ok, ko) => setTimeout(ok, 30000));
+    console.log('Geth accounts should be unlocked');
+    console.log('Sending tx to wait for DAG completion');
+    const web3 = new Web3(new Web3.providers.HttpProvider(`http://localhost:8545`));
+    const coinbase = await web3.eth.getCoinbase();
+    const receipt = await web3.eth.sendTransaction({
+        from: coinbase,
+        to: '0x0000000000000000000000000000000000000000',
+        value: 1
+    });
+    console.log('Tx was mined, DAG was built');
+};
 // Creates the container and starts it
 const run_ganache = async () => {
     signale.info(`docker: Creating container ${GANACHE_IMAGE} (${CONTAINER_NAME})`);
@@ -100,8 +172,13 @@ const clean_portal = async () => {
 };
 
 const local_start = async () => {
-    await pull_ganache();
-    await run_ganache();
+    if (process.env.T721_GETH_MODE) {
+        await pull_geth();
+        await run_geth();
+    } else {
+        await pull_ganache();
+        await run_ganache();
+    }
     await write_config();
 };
 
